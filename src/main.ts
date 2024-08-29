@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // general validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -12,6 +14,23 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // swagger config
+  const config = new DocumentBuilder()
+    .setTitle('Nest js Masterclass - Blog API')
+    .setDescription('Use the base API Url as http://localhost:3000')
+    .setTermsOfService('http://localhost:3000/terms-of-service')
+    .setLicense('MIT License', 'https://opensource.org/licenses/MIT')
+    .addServer('http://localhost:3000')
+    .setVersion('1.0')
+    .build();
+
+  // instantiate the doc
+  const document = SwaggerModule.createDocument(app, config);
+
+  // setup
+  SwaggerModule.setup('api', app, document);
+
   await app.listen(3000);
 }
 bootstrap();
