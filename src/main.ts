@@ -8,6 +8,7 @@ async function bootstrap() {
   // general validation
   app.useGlobalPipes(
     new ValidationPipe({
+      // validates the body
       whitelist: true,
       forbidNonWhitelisted: true,
       // transforms the request obj to an instance of the Dto class
