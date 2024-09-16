@@ -69,8 +69,7 @@ export class UsersController {
     // @Headers() headers: any,
     // @Ip() ip: any,
   ) {
-    console.log(createUserDto);
-    return 'You sent a post request to users endpoint';
+    return this.usersService.createUser(createUserDto);
   }
 
   @Patch()

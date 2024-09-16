@@ -22,12 +22,14 @@ export class CreateUserDto {
   lastName: string;
 
   @IsEmail()
+  @MaxLength(96)
   @IsNotEmpty()
   email: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(8)
+  @MaxLength(96)
   @Matches(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/, {
     message:
       'Minimum eigt characters, atleast one letter, number and special character',
