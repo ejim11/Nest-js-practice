@@ -14,7 +14,7 @@ import {
 } from 'class-validator';
 import { postType } from '../enums/postType.enum';
 import { postStatus } from '../enums/postStatus.enum';
-import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
+import { CreatePostMetaOptionsDto } from '../../meta-options/dtos/create-post-meta-options.dto';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -104,30 +104,23 @@ export class CreatePostDto {
 
   // @CreatePostMetaOptionsDto()
   @ApiPropertyOptional({
-    type: 'array',
+    type: 'object',
     required: false,
     items: {
       type: 'object',
       properties: {
-        key: {
-          type: 'string',
-          description:
-            'The key can be any string identifier for your meta option',
-          example: 'sidebarEnabled',
-        },
-        value: {
-          type: 'any',
-          description: 'Any value that you want to be the key',
-          example: true,
+        metaValue: {
+          type: 'json',
+          description: 'The metavalue is a json string',
+          example: `{"sidebarEnabled": true}`,
         },
       },
     },
   })
   @IsOptional()
-  @IsArray()
   // This decorator ensures all the validators are conducted but does not know what it should match
   @ValidateNested({ each: true })
   // it matches incoming requests to the dto and creates and creates an instance when an incoming request comes in and all the properties are checked too to ensure they match
   @Type(() => CreatePostMetaOptionsDto)
-  metaOptions?: CreatePostMetaOptionsDto[];
+  metaOptions?: CreatePostMetaOptionsDto | null;
 }
