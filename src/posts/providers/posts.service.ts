@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/providers/users.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { Repository } from 'typeorm';
@@ -13,6 +13,7 @@ export class PostsService {
     /**
      * injecting the users service
      */
+    @Inject(UsersService)
     private readonly usersService: UsersService,
 
     /**
@@ -55,6 +56,7 @@ export class PostsService {
   }
 
   public async findAll(userId: string) {
+    const user = this.usersService.findOneById('1234');
     console.log(userId);
 
     //users service,
