@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { MetaOption } from 'src/meta-options/meta-options.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TagsService } from 'src/tags/providers/tags.service';
+import { PatchPostDto } from '../dtos/past-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -26,13 +28,24 @@ export class PostsService {
      * Injecting the metaValue repository
      */
     @InjectRepository(MetaOption)
-    public readonly metaOptionRepository: Repository<MetaOption>,
+    private readonly metaOptionRepository: Repository<MetaOption>,
+
+    /**
+     * Injecting the tag service
+     */
+    private readonly tagsService: TagsService,
   ) {}
 
   /**
    * Creating new posts
    */
   public async create(createPostDto: CreatePostDto) {
+    // find the author
+    const author = await this.usersService.findOneById(createPostDto.authorId);
+
+    // find the tags and assign them to the post
+    const tags = await this.tagsService.findMultipleTags(createPostDto.tags);
+
     // create the metaOptions that come as part of the request
     // let metaOptions = createPostDto.metaOptions
     //   ? this.metaOptionRepository.create(createPostDto.metaOptions)
@@ -43,7 +56,11 @@ export class PostsService {
     // }
 
     // create post
-    const post = this.postRepository.create(createPostDto);
+    const post = this.postRepository.create({
+      ...createPostDto,
+      author: author,
+      tags: tags,
+    });
 
     // if metaoptions exist in the request, add them to the post
     // if (metaOptions) {
@@ -56,20 +73,48 @@ export class PostsService {
   }
 
   public async findAll(userId: string) {
-    const user = this.usersService.findOneById('1234');
-    console.log(userId);
+    // const user = this.usersService.findOneById('1234');
+    // console.log(userId);
 
     //users service,
     // find a user
     // const user = this.usersService.findOneById(userId);
 
     const posts = await this.postRepository.find({
-      // relations: {
-      //   metaOptions: true,
-      // },
+      relations: {
+        metaOptions: true,
+        // author: true,
+        // tags: true,
+      },
     });
 
     return posts;
+  }
+
+  public async update(patchPostDto: PatchPostDto) {
+    // find the tags
+    const tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    // find the post
+    let post = await this.postRepository.findOneBy({
+      id: patchPostDto.id,
+    });
+
+    // update the properties of the post
+
+    post.title = patchPostDto.title ?? post.title;
+    post.content = patchPostDto.content ?? post.content;
+    post.status = patchPostDto.status ?? post.status;
+    post.postType = patchPostDto.postType ?? post.postType;
+    post.slug = patchPostDto.slug ?? post.slug;
+    post.featuredImageUrl =
+      patchPostDto.featuredImageUrl ?? post.featuredImageUrl;
+    post.publishedOn = patchPostDto.publishOn ?? post.publishedOn;
+
+    // assign the tags to the post
+    post.tags = tags;
+
+    // save the post and return it
+    return await this.postRepository.save(post);
   }
 
   public async delete(id: number) {

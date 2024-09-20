@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsEnum,
+  IsInt,
   IsISO8601,
   IsJSON,
   IsNotEmpty,
@@ -93,14 +94,13 @@ export class CreatePostDto {
   publishOn?: Date;
 
   @ApiPropertyOptional({
-    description: 'An array of tags passed as string values',
-    example: ['nestjs', 'typescript'],
+    description: 'An array of tag id',
+    example: [1, 2, 3],
   })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
-  tags?: string[];
+  @IsInt({ each: true })
+  tags?: number[];
 
   // @CreatePostMetaOptionsDto()
   @ApiPropertyOptional({
@@ -123,4 +123,13 @@ export class CreatePostDto {
   // it matches incoming requests to the dto and creates and creates an instance when an incoming request comes in and all the properties are checked too to ensure they match
   @Type(() => CreatePostMetaOptionsDto)
   metaOptions?: CreatePostMetaOptionsDto | null;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    example: 1,
+  })
+  @IsInt()
+  authorId: number;
 }

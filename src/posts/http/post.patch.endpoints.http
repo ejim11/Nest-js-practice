@@ -2,6 +2,7 @@ PATCH http://localhost:3000/posts
 Content-Type: application/json
 
 {
-    "id": 23,
-     "postType":"jvijhb"
+    "id": 12,
+     "title": "Nest js is the coolest",
+     "tags": [1,4]
 }
