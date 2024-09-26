@@ -13,6 +13,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       // transforms the request obj to an instance of the Dto class
       transform: true,
+      transformOptions: {
+        // validation pipe takes care of implicit conversions
+        enableImplicitConversion: true,
+      },
     }),
   );
 

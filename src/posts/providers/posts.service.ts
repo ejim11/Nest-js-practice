@@ -12,6 +12,9 @@ import { MetaOption } from 'src/meta-options/meta-options.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/past-post.dto';
+import { GetPostsDto } from '../dtos/get-post.dto';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
+import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
 
 @Injectable()
 export class PostsService {
@@ -39,6 +42,11 @@ export class PostsService {
      * Injecting the tag service
      */
     private readonly tagsService: TagsService,
+
+    /**
+     * Injecting the pagination provider
+     */
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   /**
@@ -77,7 +85,10 @@ export class PostsService {
     // return the post to the user
   }
 
-  public async findAll(userId: string) {
+  public async findAll(
+    userId: string,
+    postQuery: GetPostsDto,
+  ): Promise<Paginated<Post>> {
     // const user = this.usersService.findOneById('1234');
     // console.log(userId);
 
@@ -85,13 +96,25 @@ export class PostsService {
     // find a user
     // const user = this.usersService.findOneById(userId);
 
-    const posts = await this.postRepository.find({
-      relations: {
-        metaOptions: true,
-        // author: true,
-        // tags: true,
+    // const posts = await this.postRepository.find({
+    //   relations: {
+    //     metaOptions: true,
+    //     // author: true,
+    //     // tags: true,
+    //   },
+    //   // no of posts to skip in one query
+    //   skip: (postQuery.page - 1) * postQuery.limit,
+    //   // the no of posts to take in one query
+    //   take: postQuery.limit,
+    // });
+
+    const posts = await this.paginationProvider.paginationQuery(
+      {
+        limit: postQuery.limit,
+        page: postQuery.page,
       },
-    });
+      this.postRepository,
+    );
 
     return posts;
   }
