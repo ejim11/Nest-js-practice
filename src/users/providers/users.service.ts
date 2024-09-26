@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Inject,
   Injectable,
-  NotFoundException,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { GetUserParamsDto } from '../dtos/get-users-params.dto';
@@ -16,7 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
-import { error } from 'console';
+import { UsersCreaterManyProvider } from '../provider/users-creater-many.provider';
+import { CreataeManyUsersDto } from '../dtos/create-many-users.dto';
 
 /**
  * Class to connect users table and connect business operations
@@ -47,6 +47,16 @@ export class UsersService {
      */
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+
+    // /**
+    //  * Injecting datasource
+    //  */
+    // private readonly dataSource: DataSource,
+
+    /**
+     *Inject usersCreateManyProvider
+     */
+    private readonly usersCreateManyProvider: UsersCreaterManyProvider,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -158,5 +168,47 @@ export class UsersService {
       throw new BadRequestException('The user does not exist');
     }
     return user;
+  }
+
+  // public async createMany(createUserDto: CreateUserDto[]) {
+  //   let newUsers: User[] = [];
+
+  //   // create Query Runner instance
+  //   const queryRunner = this.dataSource.createQueryRunner();
+
+  //   // connect query runner to datasource
+  //   await queryRunner.connect();
+
+  //   // start transaction
+  //   await queryRunner.startTransaction();
+
+  //   try {
+  //     for (const user of createUserDto) {
+  //       /**
+  //        * param
+  //        * entity
+  //        * dto
+  //        */
+  //       const newUser = queryRunner.manager.create(User, user);
+  //       const result = await queryRunner.manager.save(newUser);
+  //       newUsers.push(result);
+  //     }
+
+  //     // ensures the txn is committed to the db
+  //     await queryRunner.commitTransaction();
+  //   } catch (error) {
+  //     // we rollback the txn here if it is not successful
+  //     await queryRunner.rollbackTransaction();
+  //   } finally {
+  //     // release connection whether it was successful or not
+  //     await queryRunner.release();
+  //   }
+  //   // if successful commit
+  //   // if unsuccessful rollback
+  //   // relsease the connection
+  // }
+
+  public async createMany(createManyUsersDto: CreataeManyUsersDto) {
+    return await this.usersCreateManyProvider.createMany(createManyUsersDto);
   }
 }
