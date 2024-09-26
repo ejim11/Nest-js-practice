@@ -17,6 +17,7 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreaterManyProvider } from '../provider/users-creater-many.provider';
 import { CreataeManyUsersDto } from '../dtos/create-many-users.dto';
+import { CreateUserProvider } from './create-user.provider';
 
 /**
  * Class to connect users table and connect business operations
@@ -57,49 +58,58 @@ export class UsersService {
      *Inject usersCreateManyProvider
      */
     private readonly usersCreateManyProvider: UsersCreaterManyProvider,
+
+    /**
+     * Injecting the create user  provider
+     */
+    private readonly createUserProvider: CreateUserProvider,
   ) {}
 
+  // public async createUser(createUserDto: CreateUserDto) {
+  //   let existingUser;
+  //   // check if user already exists with same email
+
+  //   try {
+  //     existingUser = await this.usersRepository.findOne({
+  //       where: { email: createUserDto.email },
+  //     });
+  //   } catch (error: any) {
+  //     // Might want to save the details of the exception
+  //     // Information which is sensitive
+  //     throw new RequestTimeoutException(
+  //       'Unable to process your request at the moment, please try later',
+  //       {
+  //         description: 'Error connecting to the database',
+  //       },
+  //     );
+  //   }
+  //   // handle exception
+  //   if (existingUser) {
+  //     throw new BadRequestException(
+  //       'The user already exists, please check your email',
+  //       {},
+  //     );
+  //   }
+
+  //   // create a new user
+  //   let newUser = this.usersRepository.create(createUserDto);
+
+  //   try {
+  //     newUser = await this.usersRepository.save(newUser);
+  //   } catch (error) {
+  //     throw new RequestTimeoutException(
+  //       'Unable to process your request at the moment, please try later',
+  //       {
+  //         description: 'Error connecting to the database',
+  //       },
+  //     );
+  //   }
+
+  //   return newUser;
+  // }
+
   public async createUser(createUserDto: CreateUserDto) {
-    let existingUser;
-    // check if user already exists with same email
-
-    try {
-      existingUser = await this.usersRepository.findOne({
-        where: { email: createUserDto.email },
-      });
-    } catch (error: any) {
-      // Might want to save the details of the exception
-      // Information which is sensitive
-      throw new RequestTimeoutException(
-        'Unable to process your request at the moment, please try later',
-        {
-          description: 'Error connecting to the database',
-        },
-      );
-    }
-    // handle exception
-    if (existingUser) {
-      throw new BadRequestException(
-        'The user already exists, please check your email',
-        {},
-      );
-    }
-
-    // create a new user
-    let newUser = this.usersRepository.create(createUserDto);
-
-    try {
-      newUser = await this.usersRepository.save(newUser);
-    } catch (error) {
-      throw new RequestTimeoutException(
-        'Unable to process your request at the moment, please try later',
-        {
-          description: 'Error connecting to the database',
-        },
-      );
-    }
-
-    return newUser;
+    return this.createUserProvider.createUser(createUserDto);
   }
 
   /**
