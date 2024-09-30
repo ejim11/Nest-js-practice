@@ -1,19 +1,24 @@
+{{
+    exports.publishOn = new Date().toString()
+}}
+
+
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsImVtYWlsIjoiam9uQGV4YW1wbGUuY29tIiwiaWF0IjoxNzI3NzE5MTUwLCJleHAiOjE3Mjc3MjI3NTAsImF1ZCI6ImxvY2FsaG9zdDozMDAwIiwiaXNzIjoibG9jYWxob3N0OjMwMDAifQ.m8tjkZYLz5AFz2NDI6k-wUWGLqXFywATJd1cfLzPz_c
 
 {
     "title": "What's new with nest js",
     "postType": "post",
-    "slug": "new-with-nest-js-94",
+    "slug": "new-with-nest-js-82",
     "status": "draft",
     "content": "test content",
     "schema": "{\r\n    \"@context\": \"https:\/\/schema.org\",\r\n    \"@type\": \"Person\"\r\n  }",  
     "featuredImageUrl" : "http://localhost.com/images/image.jpg",
-    "publishOn": "2024-03-16T07:46:32+0000",
+    "publishOn": "{{publishOn}}",
     // "tags": ["nestjs","typescript"],
     "metaOptions": {
         "metaValue":  "{\"sidebarEnabled\": true, \"footerActive\": true}"
     },
-    "authorId": 3,
-    "tags": [1,3]
+    "tags": [1]
 }

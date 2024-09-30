@@ -1,5 +1,6 @@
 POST http://localhost:3000/users
 Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsImVtYWlsIjoiam9uQGV4YW1wbGUuY29tIiwiaWF0IjoxNzI3NzEwODExLCJleHAiOjE3Mjc3MTQ0MTEsImF1ZCI6ImxvY2FsaG9zdDozMDAwIiwiaXNzIjoibG9jYWxob3N0OjMwMDAifQ.t9KKS7TysMLxM4Gwmh0gcbGqv7vJ9O-vrr0XjM7ovwI
 
 {
     "firstName": "Jon",
@@ -12,6 +13,7 @@ Content-Type: application/json
 
 POST http://localhost:3000/users/create-many
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsImVtYWlsIjoiam9uQGV4YW1wbGUuY29tIiwiaWF0IjoxNzI3NzAxMjIyLCJleHAiOjE3Mjc3MDQ4MjIsImF1ZCI6ImxvY2FsaG9zdDozMDAwIiwiaXNzIjoibG9jYWxob3N0OjMwMDAifQ._dLekBy_PIWoYuMHjYdsYac_cVqEcP7kCn1Tkqn67Gs
 
 
 {

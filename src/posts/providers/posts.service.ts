@@ -15,6 +15,8 @@ import { PatchPostDto } from '../dtos/past-post.dto';
 import { GetPostsDto } from '../dtos/get-post.dto';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
+import { CreatePostProvider } from './create-post.provider';
+import { ActiveUserData } from 'src/auth/interfaces/active-user-data.interface';
 
 @Injectable()
 export class PostsService {
@@ -47,42 +49,18 @@ export class PostsService {
      * Injecting the pagination provider
      */
     private readonly paginationProvider: PaginationProvider,
+
+    /**
+     * Inject create post provider
+     */
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
   /**
    * Creating new posts
    */
-  public async create(createPostDto: CreatePostDto) {
-    // find the author
-    const author = await this.usersService.findOneById(createPostDto.authorId);
-
-    // find the tags and assign them to the post
-    const tags = await this.tagsService.findMultipleTags(createPostDto.tags);
-
-    // create the metaOptions that come as part of the request
-    // let metaOptions = createPostDto.metaOptions
-    //   ? this.metaOptionRepository.create(createPostDto.metaOptions)
-    //   : null;
-
-    // if (metaOptions) {
-    //   await this.metaOptionRepository.save(metaOptions);
-    // }
-
-    // create post
-    const post = this.postRepository.create({
-      ...createPostDto,
-      author: author,
-      tags: tags,
-    });
-
-    // if metaoptions exist in the request, add them to the post
-    // if (metaOptions) {
-    //   post.metaOptions = metaOptions;
-    // }
-
-    return await this.postRepository.save(post);
-
-    // return the post to the user
+  public async create(createPostDto: CreatePostDto, user: ActiveUserData) {
+    return await this.createPostProvider.create(createPostDto, user);
   }
 
   public async findAll(

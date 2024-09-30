@@ -9,6 +9,8 @@ import { UsersCreaterManyProvider } from './provider/users-creater-many.provider
 import { CreateUserProvider } from './providers/create-user.provider';
 import { FindOneUserByEmailProvider } from './providers/find-one-user-by-email.provider';
 import profileConfig from './config/profile.config';
+// import jwtConfig from 'src/auth/config/jwt.config';
+// import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [UsersController],
@@ -17,6 +19,11 @@ import profileConfig from './config/profile.config';
     UsersCreaterManyProvider,
     CreateUserProvider,
     FindOneUserByEmailProvider,
+    // // providing the app guard
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AccessTokenGuard,
+    // },
   ],
   exports: [UsersService],
   imports: [
@@ -26,6 +33,11 @@ import profileConfig from './config/profile.config';
     TypeOrmModule.forFeature([User]),
     // Importing an enviroment config specific for this module
     ConfigModule.forFeature(profileConfig),
+    forwardRef(() => UsersModule),
+    // // Importing an enviroment config specific for this module
+    // ConfigModule.forFeature(jwtConfig),
+    // // for asynchrousnously registering the jwt module and passing the config to the module
+    // JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
 })
 export class UsersModule {}

@@ -10,6 +10,8 @@ import {
   Patch,
   Post,
   Query,
+  // SetMetadata,
+  // UseGuards,
   // ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -18,6 +20,9 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { UsersService } from './providers/users.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreataeManyUsersDto } from './dtos/create-many-users.dto';
+// import { AccessTokenGuard } from 'src/auth/guards/access-token/access-token.guard';
+import { Auth } from 'src/auth/decorator/auth.decorator';
+import { AuthType } from 'src/auth/enums/auth-type.enum';
 
 @Controller('users')
 // giving the controller a name on swagger
@@ -65,6 +70,8 @@ export class UsersController {
   }
 
   @Post()
+  // @SetMetadata('authType', 'none')
+  @Auth(AuthType.None)
   public createUsers(
     @Body() createUserDto: CreateUserDto,
     // @Headers() headers: any,
@@ -73,6 +80,7 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
+  // @UseGuards(AccessTokenGuard)
   @Post('/create-many')
   public createManyUsers(
     @Body() createManyUsersDto: CreataeManyUsersDto,
