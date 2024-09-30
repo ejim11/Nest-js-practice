@@ -18,6 +18,7 @@ import profileConfig from '../config/profile.config';
 import { UsersCreaterManyProvider } from '../provider/users-creater-many.provider';
 import { CreataeManyUsersDto } from '../dtos/create-many-users.dto';
 import { CreateUserProvider } from './create-user.provider';
+import { FindOneUserByEmailProvider } from './find-one-user-by-email.provider';
 
 /**
  * Class to connect users table and connect business operations
@@ -63,6 +64,11 @@ export class UsersService {
      * Injecting the create user  provider
      */
     private readonly createUserProvider: CreateUserProvider,
+
+    /**
+     * Injecting the findOneUserByEmailProvider
+     */
+    private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
   ) {}
 
   // public async createUser(createUserDto: CreateUserDto) {
@@ -220,5 +226,9 @@ export class UsersService {
 
   public async createMany(createManyUsersDto: CreataeManyUsersDto) {
     return await this.usersCreateManyProvider.createMany(createManyUsersDto);
+  }
+
+  public async findOneByEmail(email: string) {
+    return this.findOneUserByEmailProvider.findOneByEmail(email);
   }
 }
