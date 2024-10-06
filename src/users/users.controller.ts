@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
   Get,
@@ -10,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
   // SetMetadata,
   // UseGuards,
   // ValidationPipe,
@@ -72,6 +74,7 @@ export class UsersController {
   @Post()
   // @SetMetadata('authType', 'none')
   @Auth(AuthType.None)
+  @UseInterceptors(ClassSerializerInterceptor)
   public createUsers(
     @Body() createUserDto: CreateUserDto,
     // @Headers() headers: any,
