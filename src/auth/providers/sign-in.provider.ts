@@ -8,10 +8,11 @@ import {
 import { SignInDto } from '../dtos/signin.dto';
 import { UsersService } from 'src/users/providers/users.service';
 import { HashingProvider } from './hashing.provider';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigType } from '@nestjs/config';
-import jwtConfig from '../config/jwt.config';
-import { ActiveUserData } from '../interfaces/active-user-data.interface';
+// import { JwtService } from '@nestjs/jwt';
+// import { ConfigType } from '@nestjs/config';
+// import jwtConfig from '../config/jwt.config';
+// import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { GenerateTokensProvider } from './generate-tokens.provider';
 
 @Injectable()
 export class SignInProvider {
@@ -30,13 +31,18 @@ export class SignInProvider {
     /**
      * Injecting the jwt service
      */
-    private readonly jwtService: JwtService,
+    // private readonly jwtService: JwtService,
 
     /**
      * Injecting the jwt config
      */
-    @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    // @Inject(jwtConfig.KEY)
+    // private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+
+    /**
+     * injecting the generate token provider
+     */
+    private readonly generateTokenProvider: GenerateTokensProvider,
   ) {}
 
   public async signIn(signInDto: SignInDto) {
@@ -64,21 +70,22 @@ export class SignInProvider {
     // send confirmation
 
     // generate an access token
-    const accessToken = await this.jwtService.signAsync(
-      {
-        sub: user.id,
-        email: user.email,
-      } as ActiveUserData,
-      {
-        audience: this.jwtConfiguration.audience,
-        issuer: this.jwtConfiguration.issuer,
-        secret: this.jwtConfiguration.secret,
-        expiresIn: this.jwtConfiguration.accessTokenTtl,
-      },
-    );
+    return this.generateTokenProvider.generateTokens(user);
+    // const accessToken = await this.jwtService.signAsync(
+    //   {
+    //     sub: user.id,
+    //     email: user.email,
+    //   } as ActiveUserData,
+    //   {
+    //     audience: this.jwtConfiguration.audience,
+    //     issuer: this.jwtConfiguration.issuer,
+    //     secret: this.jwtConfiguration.secret,
+    //     expiresIn: this.jwtConfiguration.accessTokenTtl,
+    //   },
+    // );
 
-    return {
-      accessToken,
-    };
+    // return {
+    //   accessToken,
+    // };
   }
 }
