@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 // import { DataResponseInterceptor } from './common/interceptors/data-response/data-response.interceptor';
+import { config } from 'aws-sdk';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,7 +24,7 @@ async function bootstrap() {
   );
 
   // swagger config
-  const config = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     // setting the title of the documentation
     .setTitle('Nest js Masterclass - Blog API')
     // setting the description of the documentation
@@ -34,10 +36,20 @@ async function bootstrap() {
     .build();
 
   // instantiate the doc
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
 
   // setup
   SwaggerModule.setup('api', app, document);
+
+  // setup aws sdk
+  const configService = app.get(ConfigService);
+  config.update({
+    credentials: {
+      accessKeyId: configService.get('appConfig.awsAccessKeyId'),
+      secretAccessKey: configService.get('appConfig.awsSecretAccessKey'),
+    },
+    region: configService.get('appConfig.awsRegion'),
+  });
 
   // enable cors
   app.enableCors();
