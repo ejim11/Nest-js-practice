@@ -5,10 +5,10 @@ Content-Type: application/json
 {
     "firstName": "Jon",
     "lastName": "Doe",
-    "email": "jondoe@example.com",
+    "email": "fejim188@gmail.com",
     "password": "#Johndoe1"
 }
-
+ 
 
 
 POST http://localhost:3000/users/create-many

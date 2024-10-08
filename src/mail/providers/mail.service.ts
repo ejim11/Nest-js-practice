@@ -14,7 +14,7 @@ export class MailService {
   public async sendUserWelcome(user: User): Promise<void> {
     await this.mailerService.sendMail({
       to: user.email,
-      from: `Onboarding Team <support@nestjs-blog.com`,
+      from: `Onboarding Team <favourejim56@gmail.com>`,
       subject: 'Welcome to Nestjs Blog',
       template: './welcome',
       context: {
