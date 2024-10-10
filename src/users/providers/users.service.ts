@@ -134,7 +134,7 @@ export class UsersService {
   /**
    * The method to get all users from the database
    */
-  public findAll(
+  public async findAll(
     getUserParamsDto: GetUserParamsDto,
     limit: number,
     page: number,
@@ -156,19 +156,23 @@ export class UsersService {
     // ];
 
     // custom exception
-    throw new HttpException(
-      {
-        status: HttpStatus.MOVED_PERMANENTLY,
-        error: 'The API endpoint does not exist',
-        fileName: 'users.service.ts',
-        lineNumber: 88,
-      },
-      HttpStatus.MOVED_PERMANENTLY,
-      {
-        cause: new Error(),
-        description: 'Occured because the API endpoint was permanently moved',
-      },
-    );
+    // throw new HttpException(
+    //   {
+    //     status: HttpStatus.MOVED_PERMANENTLY,
+    //     error: 'The API endpoint does not exist',
+    //     fileName: 'users.service.ts',
+    //     lineNumber: 88,
+    //   },
+    //   HttpStatus.MOVED_PERMANENTLY,
+    //   {
+    //     cause: new Error(),
+    //     description: 'Occured because the API endpoint was permanently moved',
+    //   },
+    // );
+
+    const users = await this.usersRepository.find();
+
+    return users;
   }
 
   /**

@@ -33,6 +33,7 @@ export class UsersController {
   // injecting users service
   constructor(private readonly usersService: UsersService) {}
 
+  @Auth(AuthType.None)
   @Get('/:id?')
   // giving the api route a summary or decription of what it does
   @ApiOperation({
