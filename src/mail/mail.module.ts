@@ -24,7 +24,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
           },
         },
         default: {
-          from: `My blog <no-reply@nestjs-blog.com>`,
+          from: `TicketHive <no-reply@ticket-hive.com>`,
         },
         template: {
           dir: join(__dirname, 'templates'),

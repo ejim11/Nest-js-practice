@@ -33,11 +33,7 @@ export class UploadsService {
 
   public async uploadFile(file: Express.Multer.File) {
     // throw error for unsupported mimetype
-    if (
-      !['image/gif', 'image/jpeg', 'image/png', 'image/jpg'].includes(
-        file.mimetype,
-      )
-    ) {
+    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.mimetype)) {
       throw new BadRequestException('mime type not supported');
     }
 
