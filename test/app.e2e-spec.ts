@@ -1,23 +1,28 @@
-import { Test, TestingModule } from '@nestjs/testing';
+// import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+// import { AppModule } from '../src/app.module';
+import { boostrapNestApplication } from './helpers/boostrap-nest-application.helper';
+import { ConfigService } from '@nestjs/config';
+import { dropDatabase } from './helpers/drop-database.helper';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let config: ConfigService;
+  let httpServer;
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    app = await boostrapNestApplication();
+    config = app.get<ConfigService>(ConfigService);
+    httpServer = app.getHttpServer();
+  });
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
+  afterEach(async () => {
+    await dropDatabase(config);
+    await app.close();
   });
 
   it('/ (GET)', () => {
-    console.log(process.env.NODE_ENV);
-    console.log(process.env.ENV);
-    return request(app.getHttpServer()).get('/').expect(200);
+    return request(httpServer).get('/').expect(200);
   });
 });

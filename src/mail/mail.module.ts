@@ -17,7 +17,7 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
         transport: {
           host: config.get('appConfig.mailHost'),
           secure: false,
-          port: 587,
+          port: 465,
           auth: {
             user: config.get('appConfig.smtpUsername'),
             pass: config.get('appConfig.smtpPassword'),
